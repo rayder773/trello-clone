@@ -1,0 +1,16 @@
+@import "src/assets/style/variables";
+
+.taskCol {
+  width: 100%;
+  max-width: $maxWidthCol;
+}
+
+.header {
+  min-height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+}

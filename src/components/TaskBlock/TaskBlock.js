@@ -1,19 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import s from './style.module.scss';
+
 
 const TaskBlock = (props) => {
-  const { name } = props;
+  const { task } = props;
+
+  const getTitleBackground = { background: task.titleBackground };
+  const getByBoundAttribute = { background: task.bodyBackground };
 
   return (
-    <div>{name ? `Hello, ${name}!` : 'Hey, stranger'}</div>
+    <div
+      className={s.taskCol}
+      key={task.title}
+      style={getByBoundAttribute}
+    >
+      <div
+        className={s.header}
+        style={getTitleBackground}
+      >
+        {task.title}
+      </div>
+    </div>
   );
 };
 TaskBlock.propTypes = {
-  name: PropTypes.string,
-};
-
-TaskBlock.defaultProps = {
-  name: '',
+  task: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 
 export default TaskBlock;
