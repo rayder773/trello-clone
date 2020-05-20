@@ -1,25 +1,27 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { applyMiddleware, createStore } from 'redux';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import { ErrorBoundary } from 'react-error-boundary';
+import MainPage from './pages/MainPage';
+import reducer from './store/reducers';
+import ErrorFallback from './components/ErrorFallback';
+
+const store = createStore(reducer, composeWithDevTools(applyMiddleware(thunk)));
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <Provider store={store}>
+        <Router>
+          <Switch>
+            <Route path="/" component={MainPage} />
+          </Switch>
+        </Router>
+      </Provider>
+    </ErrorBoundary>
   );
 }
 
