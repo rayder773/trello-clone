@@ -1,19 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Droppable } from 'react-beautiful-dnd';
 import s from './style.module.scss';
 import Card from '../Card';
 
 const cards = [
   {
+    id: 1,
     title: 'first',
     description: 'description',
   },
   {
-    title: 'first',
+    id: 2,
+    title: 'second',
     description: 'description',
   },
   {
-    title: 'first',
+    id: 3,
+    title: 'third',
     description: 'description',
   },
 ];
@@ -36,9 +40,24 @@ const TaskBlock = (props) => {
       >
         {task.title}
       </div>
-      <ul className={s.cardList}>
-        {cards.map((card) => <Card card={card} />)}
-      </ul>
+      <Droppable droppableId={task.title}>
+        {(provided) => (
+          <ul
+            className={s.cardList}
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+          >
+            {cards.map((card, i) => (
+              <Card
+                card={card}
+                index={i}
+              />
+            ))}
+            {provided.placeholder}
+          </ul>
+        )}
+
+      </Droppable>
     </div>
   );
 };
