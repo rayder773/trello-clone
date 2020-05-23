@@ -1,3 +1,6 @@
-import Card from './Card';
+import { Card, NewCardWithFirebase as NewCard } from './Card';
 
-export default Card;
+export {
+  Card,
+  NewCard,
+};
