@@ -1,9 +1,9 @@
-import React, {useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import s from './style.module.scss';
 import taskTypes from './taskTypes';
 import TaskBlock from '../components/TaskBlock';
-import { FirebaseContext } from '../components/Firebase';
+import { withFirebase } from '../components/Firebase/context';
 
 const MainPage = (props) => {
   const onDragEnd = (result) => {
@@ -21,4 +21,4 @@ const MainPage = (props) => {
   );
 };
 
-export default MainPage;
+export default withFirebase(MainPage);
