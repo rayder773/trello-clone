@@ -1,69 +1,114 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Droppable } from 'react-beautiful-dnd';
 import s from './style.module.scss';
-import Card from '../Card';
+import { Card, NewCard } from '../Card';
+import TaskActions from '../../store/reducers/tasks';
 
-const cards = [
-  {
-    id: 1,
-    title: 'first',
-    description: 'description',
-  },
-  {
-    id: 2,
-    title: 'second',
-    description: 'description',
-  },
-  {
-    id: 3,
-    title: 'third',
-    description: 'description',
-  },
-];
+const { setIsNewCreating, setData } = TaskActions;
 
 const TaskBlock = (props) => {
-  const { task } = props;
+  const {
+    taskType,
+    tasks,
+    isNewCreating,
+    setIsNewCreating,
+    setData,
+    setColumn,
+  } = props;
 
-  const getTitleBackground = { background: task.titleBackground };
-  const getByBoundAttribute = { background: task.bodyBackground };
+  const getTitleBackground = { background: taskType.titleBackground };
+  const getByBoundAttribute = { background: taskType.bodyBackground };
+
+  const onCreateTask = (e) => {
+    e.preventDefault();
+    console.log(tasks);
+    const newId = tasks ? tasks[tasks.length - 1].id + 1 : 0;
+
+    const newTask = {
+      id: newId,
+      type: taskType.type,
+      isNew: true,
+    };
+
+    // setIsNewCreating(true);
+    setColumn(newTask, taskType.type);
+
+    // const sortedTasks = taskList
+    //   && [...taskList].sort((a, b) => a.id - b.id);
+    // const newId = sortedTasks.length ? sortedTasks[sortedTasks.length - 1].id + 1 : 1;
+    // taskListCopy.push({
+    //   id: newId,
+    //   type: taskType.type,
+    //   isNew: true,
+    // });
+    //
+    // setFilteredTasks(taskListCopy);
+    // setIsCreateNew(true);
+  };
 
   return (
     <div
       className={s.taskCol}
-      key={task.title}
+      key={taskType.title}
       style={getByBoundAttribute}
     >
       <div
         className={s.header}
         style={getTitleBackground}
       >
-        {task.title}
+        {taskType.title}
       </div>
-      <Droppable droppableId={task.title}>
+      <Droppable droppableId={taskType.type}>
         {(provided) => (
           <ul
             className={s.cardList}
             {...provided.droppableProps}
             ref={provided.innerRef}
           >
-            {cards.map((card, i) => (
-              <Card
-                card={card}
-                index={i}
-              />
-            ))}
+            {tasks && tasks.map((card, i) => (card.isNew
+              ? (
+                <NewCard
+                  card={card}
+                  key={card.id}
+                />
+              ) : (
+                <Card
+                  card={card}
+                  index={i}
+                  key={card.id}
+                />
+
+              )))}
             {provided.placeholder}
           </ul>
         )}
 
       </Droppable>
+      {!isNewCreating && <button onClick={onCreateTask}>Click</button>}
     </div>
   );
 };
 
 TaskBlock.propTypes = {
-  task: PropTypes.objectOf(PropTypes.string).isRequired,
+  taskType: PropTypes.shape({
+    onlyTitle: PropTypes.bool.isRequired,
+    type: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    titleBackground: PropTypes.string.isRequired,
+    bodyBackground: PropTypes.string.isRequired,
+    withMark: PropTypes.bool.isRequired,
+    crossedOut: PropTypes.bool.isRequired,
+  }).isRequired,
 };
 
-export default TaskBlock;
+const mapStateToProps = ({ tasks }) => ({
+  isNewCreating: tasks.isNewCreating,
+});
+
+const mapDispatchToProps = {
+  setIsNewCreating,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TaskBlock);

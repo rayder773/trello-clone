@@ -3,6 +3,7 @@
 .taskCol {
   width: 100%;
   max-width: $maxWidthCol;
+  height: fit-content;
 }
 
 .header {
@@ -17,4 +18,8 @@
 
 .cardList {
   list-style: none;
+}
+
+.test {
+  background: green;
 }

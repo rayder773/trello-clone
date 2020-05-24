@@ -6,3 +6,13 @@
   padding: 15px;
   overflow-wrap: break-word;
 }
+
+.draggableCardBody {
+  margin: 10px;
+  border-radius: 15px;
+  min-height: 100px;
+  background: red;
+  padding: 15px;
+  overflow-wrap: break-word;
+  transform: rotate(20deg);
+}

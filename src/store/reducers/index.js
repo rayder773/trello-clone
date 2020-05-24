@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
-import people from "./people";
+import { reducer as tasks } from './tasks';
 
 export default combineReducers({
-  people
+  tasks,
 });

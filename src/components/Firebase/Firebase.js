@@ -2,6 +2,11 @@ import app from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
 
+const FIRE_BASE_FIELDS = {
+  tasks: 'tasks',
+  columns: 'columns',
+};
+
 const config = {
   apiKey: process.env.REACT_APP_API_KEY,
   authDomain: process.env.REACT_APP_AUTH_DOMAIN,
@@ -17,9 +22,17 @@ class Firebase {
     this.db = app.database();
   }
 
-  message = uid => this.db.ref(`messages/${uid}`);
+  taskList = () => this.db.ref('taskList');
 
-  messages = () => this.db.ref('messages');
+  addToTaskList = (task) => this.taskList()
+    .child(FIRE_BASE_FIELDS.tasks)
+    .child(task.id)
+    .set(task);
+
+  addToColumns = (column) => this.taskList()
+    .child(FIRE_BASE_FIELDS.columns)
+    .child(column.title)
+    .set(column);
 }
 
 export default Firebase;

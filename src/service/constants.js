@@ -2,6 +2,14 @@ export const TITLES = {
   backlog: 'Backlog (Open)',
   selected: 'Selected',
   running: 'Running',
+  evaluating: 'Evaluating',
+  live: 'Live',
+};
+
+export const TYPES = {
+  backlog: 'backlog',
+  selected: 'selected',
+  running: 'running',
   evaluating: 'evaluating',
   live: 'live',
 };

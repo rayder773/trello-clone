@@ -1,9 +1,13 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useState } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Draggable } from 'react-beautiful-dnd';
 import s from './Card.module.scss';
 import { withFirebase } from '../Firebase/context';
-import { TaskContext } from '../../pages/MainPage';
+import TaskActions from '../../store/reducers/tasks';
+import { jsonParse } from '../../service/utils';
+
+const { setIsNewCreating, setData } = TaskActions;
 
 const initialForm = {
   title: '',
@@ -13,29 +17,32 @@ export const NewCard = (props) => {
   const {
     card,
     firebase,
-    filteredTasks,
-    setFilteredTasks,
+    tasks,
+    setIsNewCreating,
+    columns,
+    setData,
   } = props;
   const [form, setForm] = useState(initialForm);
-  const { setIsCreateNew } = useContext(TaskContext);
 
   const onSubmit = (e) => {
     e.preventDefault();
-
-    console.log(filteredTasks);
-
-    const lastIndex = filteredTasks && !filteredTasks[0].isNew ? filteredTasks.length : 0;
 
     const newTask = {
       id: card.id,
       title: form.title,
       description: '',
       type: card.type,
-      index: lastIndex,
     };
 
-    firebase.addToTaskList(newTask).then(() => console.log('task added'));
-    setIsCreateNew(false);
+    const columnsCopy = jsonParse(columns[card.type])
+
+    columnsCopy.title = card.type
+
+    firebase.addToTaskList(newTask).then(() => {
+      firebase.addToColumns(columnsCopy);
+    });
+
+    console.log(columnsCopy);
   };
 
   const onChange = (e) => {
@@ -47,16 +54,21 @@ export const NewCard = (props) => {
   };
 
   const onCloseClick = useCallback(() => {
-    const arr = [...filteredTasks];
-    const index = arr.findIndex((el) => el.isNew === true);
+    const tasksCopy = [...tasks];
+    const columnsCopy = jsonParse(columns);
+    const taskIndex = tasksCopy.findIndex((el) => el.isNew === true);
+    const taskForDelete = tasksCopy[taskIndex];
+    const taskIndexInColumn = columnsCopy[taskForDelete.type].taskIds.findIndex((el) => el === taskForDelete.id);
 
-    const newArr = [
-      ...arr.slice(0, index),
-      ...arr.slice(index + 1),
-    ];
+    tasksCopy.splice(taskIndex, 1);
+    columnsCopy[taskForDelete.type].taskIds.splice(taskIndexInColumn, 1);
+    setData({
+      tasks: tasksCopy.length && tasksCopy.length,
+      ...columns,
+      columns: columnsCopy,
+    });
 
-    setFilteredTasks(newArr);
-    setIsCreateNew(false);
+    setIsNewCreating(false);
   }, []);
 
   return (
@@ -75,21 +87,23 @@ export const NewCard = (props) => {
 
 const Card = (props) => {
   const { card, index } = props;
-
   return (
     <Draggable
       draggableId={card.id.toString()}
       index={index}
     >
-      {(provided) => (
+      {(provided, snapshot) => (
+
         <li
-          className={s.cardBody}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
         >
-          <div>{card.title}</div>
-          <div>{card.description}</div>
+          <div className={snapshot.isDragging ? s.draggableCardBody : s.cardBody}>
+            <div>{card.title}</div>
+            <div>{card.description}</div>
+          </div>
+
         </li>
       )}
     </Draggable>
@@ -105,7 +119,17 @@ NewCard.propTypes = {
   card: PropTypes.object.isRequired,
 };
 
-const NewCardWithFirebase = withFirebase(NewCard);
+const mapStateToProps = ({ tasks }) => ({
+  tasks: tasks.tasks,
+  columns: tasks.columns,
+});
+
+const mapDispatchToProps = {
+  setIsNewCreating,
+  setData,
+};
+
+const NewCardWithFirebase = connect(mapStateToProps, mapDispatchToProps)(withFirebase(NewCard));
 
 export {
   NewCardWithFirebase,

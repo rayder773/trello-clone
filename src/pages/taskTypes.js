@@ -1,8 +1,9 @@
-import { COLORS, TITLES } from '../service/constants';
+import { COLORS, TITLES, TYPES } from '../service/constants';
 
 export default {
   backlog: {
     title: TITLES.backlog,
+    type: TYPES.backlog,
     bodyBackground: COLORS.darkGrey,
     titleBackground: COLORS.grey,
     onlyTitle: true,
@@ -11,6 +12,7 @@ export default {
   },
   selected: {
     title: TITLES.selected,
+    type: TYPES.selected,
     bodyBackground: COLORS.darkYellow,
     titleBackground: COLORS.yellow,
     onlyTitle: false,
@@ -19,6 +21,7 @@ export default {
   },
   running: {
     title: TITLES.running,
+    type: TYPES.running,
     bodyBackground: COLORS.darkPurple,
     titleBackground: COLORS.purple,
     onlyTitle: false,
@@ -27,6 +30,7 @@ export default {
   },
   evaluating: {
     title: TITLES.evaluating,
+    type: TYPES.evaluating,
     bodyBackground: COLORS.darkBlue,
     titleBackground: COLORS.blue,
     onlyTitle: false,
@@ -35,6 +39,7 @@ export default {
   },
   live: {
     title: TITLES.live,
+    type: TYPES.live,
     bodyBackground: COLORS.darkGreen,
     titleBackground: COLORS.green,
     onlyTitle: true,
