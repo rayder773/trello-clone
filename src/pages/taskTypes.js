@@ -1,4 +1,9 @@
 import { COLORS, TITLES, TYPES } from '../service/constants';
+import doneWhite from '../assets/images/done_white.png';
+import gear from '../assets/images/gear.png';
+import lamp from '../assets/images/lamp.png';
+import question from '../assets/images/question.png';
+import select from '../assets/images/select.png';
 
 export default {
   backlog: {
@@ -9,6 +14,7 @@ export default {
     onlyTitle: true,
     withMark: false,
     crossedOut: false,
+    image: lamp,
   },
   selected: {
     title: TITLES.selected,
@@ -18,6 +24,7 @@ export default {
     onlyTitle: false,
     withMark: true,
     crossedOut: false,
+    image: select,
   },
   running: {
     title: TITLES.running,
@@ -27,6 +34,7 @@ export default {
     onlyTitle: false,
     withMark: true,
     crossedOut: false,
+    image: gear,
   },
   evaluating: {
     title: TITLES.evaluating,
@@ -36,6 +44,7 @@ export default {
     onlyTitle: false,
     withMark: true,
     crossedOut: false,
+    image: question,
   },
   live: {
     title: TITLES.live,
@@ -45,5 +54,6 @@ export default {
     onlyTitle: true,
     withMark: false,
     crossedOut: true,
+    image: doneWhite,
   },
 };

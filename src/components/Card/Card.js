@@ -6,12 +6,25 @@ import s from './Card.module.scss';
 import { withFirebase } from '../Firebase/context';
 import TaskActions from '../../store/reducers/tasks';
 import { jsonParse } from '../../service/utils';
+import doneGreen from '../../assets/images/done_green.png';
+import { STRINGS } from './strings';
+import cancelImage from '../../assets/images/close-circle.png';
+import ModalActions from '../../store/reducers/modal';
+
+const { setModal } = ModalActions;
 
 const { setIsNewCreating, setData } = TaskActions;
 
 const initialForm = {
   title: '',
 };
+
+const CompletedTaskHeader = () => (
+  <div className={s.completedTaskHeader}>
+    <img src={doneGreen} />
+    Completed
+  </div>
+);
 
 export const NewCard = (props) => {
   const {
@@ -21,6 +34,7 @@ export const NewCard = (props) => {
     setIsNewCreating,
     columns,
     setData,
+    setModal,
   } = props;
   const [form, setForm] = useState(initialForm);
 
@@ -61,7 +75,9 @@ export const NewCard = (props) => {
     });
   };
 
-  const onCloseClick = () => {
+  const onCloseClick = (e) => {
+    e.stopPropagation();
+
     const tasksCopy = jsonParse(tasks);
     const columnsCopy = jsonParse(columns);
     const taskIndex = tasksCopy.findIndex((el) => el.isNew === true);
@@ -81,21 +97,48 @@ export const NewCard = (props) => {
 
   return (
     <li>
-      <form onSubmit={onSubmit}>
+      <form
+        onSubmit={onSubmit}
+        className={s.form}
+      >
         <textarea
           value={form.title}
           onChange={onChange}
+          className={s.textarea}
+          placeholder={STRINGS.textareaPlaceHolder}
         />
-        <button type="submit">Submit</button>
-        <button onClick={onCloseClick}>Close</button>
+        <div className={s.formButtonsWrapper}>
+          <button
+            type="submit"
+            className={s.addNewCard}
+          >
+            {STRINGS.addNewCard}
+          </button>
+          <button
+            onClick={onCloseClick}
+            className={s.cancelButton}
+          >
+            <img src={cancelImage} />
+          </button>
+        </div>
       </form>
     </li>
   );
 };
 
 const Card = (props) => {
-  const { card, index } = props;
+  const {
+    card,
+    index,
+    taskType,
+    setModal,
+  } = props;
   const cardClassName = (snapshot) => `${s.cardBody} ${snapshot.isDragging ? s.draggableCardBody : ''}`;
+  const cartTitleClassName = taskType.crossedOut ? s.liveStatus : '';
+
+  const onCardClick = () => {
+    setModal(true, card)
+  }
 
   return (
     <Draggable
@@ -108,12 +151,19 @@ const Card = (props) => {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
+          onClick={onCardClick}
         >
           <div
             className={cardClassName(snapshot)}
-            // className={snapshot.isDragging ? s.draggableCardBody : s.cardBody}
           >
-            <div>{card.title}</div>
+            {taskType.crossedOut && <CompletedTaskHeader />}
+            <div className={s.cardBodyInner}>
+              <div
+                className={cartTitleClassName}
+              >
+                <div className={s.cardTitle}>{card.title}</div>
+              </div>
+            </div>
             <div>{card.description}</div>
           </div>
 
@@ -140,11 +190,13 @@ const mapStateToProps = ({ tasks }) => ({
 const mapDispatchToProps = {
   setIsNewCreating,
   setData,
+  setModal,
 };
 
 const NewCardWithFirebase = connect(mapStateToProps, mapDispatchToProps)(withFirebase(NewCard));
 
+export default connect(mapStateToProps, mapDispatchToProps)(Card);
+
 export {
   NewCardWithFirebase,
-  Card,
 };

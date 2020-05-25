@@ -7,26 +7,17 @@ import TaskBlock from '../components/TaskBlock';
 import { withFirebase } from '../components/Firebase/context';
 import TaskActions from '../store/reducers/tasks';
 import { jsonParse } from '../service/utils';
+import Modal from "../components/Modal/Modal";
 
 const { setData, setIsNewCreating } = TaskActions;
 
 class TaskBlockWrapper extends React.Component {
-  // shouldComponentUpdate(nextProps) {
-  //   const { tasks } = this.props;
-  //   if (nextProps.tasks === tasks) {
-  //     return false;
-  //   }
-  //   return true;
-  // }
-
   render() {
     const {
       taskType,
       tasks,
       setColumn,
     } = this.props;
-
-    console.log('tasks:', tasks);
 
     return (
       <TaskBlock
@@ -170,6 +161,7 @@ const MainPage = (props) => {
             />
           ))}
       </DragDropContext>
+      <Modal />
     </div>
   );
 };

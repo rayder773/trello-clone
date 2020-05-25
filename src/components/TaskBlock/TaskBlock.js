@@ -14,10 +14,7 @@ const TaskBlock = (props) => {
     taskType,
     columnTasks,
     isNewCreating,
-    setIsNewCreating,
-    setData,
     setColumn,
-    columns,
     allTasks,
   } = props;
 
@@ -47,7 +44,13 @@ const TaskBlock = (props) => {
         className={s.header}
         style={getTitleBackground}
       >
-        {taskType.title}
+        <div className={s.imageWithTitle}>
+          <img src={taskType.image} />
+          {taskType.title}
+        </div>
+        <div className={s.taskCounter}>
+          {columnTasks.length || 0}
+        </div>
       </div>
       <Droppable droppableId={taskType.type}>
         {(provided) => (
@@ -67,6 +70,7 @@ const TaskBlock = (props) => {
                   card={card}
                   index={i}
                   key={card.id}
+                  taskType={taskType}
                 />
 
               )))}
@@ -75,7 +79,7 @@ const TaskBlock = (props) => {
         )}
 
       </Droppable>
-      {!isNewCreating && (
+      {!isNewCreating && !taskType.crossedOut && (
       <div
         onClick={onCreateTask}
         className={s.addButton}

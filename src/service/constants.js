@@ -19,7 +19,7 @@ export const COLORS = {
   yellow: '#E7F59E',
   purple: '#FF4365',
   blue: '#6CBEED',
-  green: '#B9F5D8',
+  green: '#6CF5B3',
   darkGrey: '#768074',
   darkYellow: '#B9C67E',
   darkPurple: '#DC3651',

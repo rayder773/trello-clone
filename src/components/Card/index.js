@@ -1,4 +1,4 @@
-import { Card, NewCardWithFirebase as NewCard } from './Card';
+import Card, { NewCardWithFirebase as NewCard } from './Card';
 
 export {
   Card,

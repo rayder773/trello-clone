@@ -1,15 +1,83 @@
 @import "src/assets/style/variables";
+@import "src/assets/style/mixins";
+
+.completedTaskHeader {
+  border-bottom: 1px solid grey;
+  color: grey;
+  display: flex;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 14px;
+
+  img {
+    padding: 0 5px 0 10px;
+  }
+}
+
+.cardTitle {
+  padding: 15px;
+}
+
+.textarea {
+  max-width: 230px;
+  width: 90%;
+  resize: unset;
+  overflow: hidden;
+  height: 50px;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 5px;
+
+  &::placeholder {
+    font-size: 14px;
+  }
+}
+
+.cancelButton {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+}
+
+.formButtonsWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.form {
+  padding: 0 11px;
+  margin-bottom: 10px;
+}
+
+.addNewCard {
+  @include button($colorTrelloGreen);
+  margin-right: 10px;
+}
 
 .cardBody {
   margin: 10px;
   border-radius: 5px;
   min-height: $maxHeightCard;
   background: $cardBackGround;
-  padding: 15px;
   overflow-wrap: break-word;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
+.cardBodyInner {
+  min-height: $maxHeightCard;
+}
+
 .draggableCardBody {
   transform: rotate(15deg);
+}
+
+.liveStatus {
+  text-decoration: line-through;
+  color: grey;
+}
+
+.modal {
+
 }

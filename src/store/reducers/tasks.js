@@ -20,8 +20,7 @@ export const setIsNewCreating = (state, actions) => {
 };
 
 export const setData = (state, actions) => {
-  console.log(actions);
-  const { data: { columns, tasks } } = actions;
+  const { data: { columns = state.columns, tasks } } = actions;
   return state.merge({
     columns,
     tasks,
