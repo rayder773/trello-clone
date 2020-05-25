@@ -34,24 +34,22 @@ export const NewCard = (props) => {
       type: card.type,
     };
 
-    const columnsCopy = jsonParse(columns[card.type])
+    const columnsCopy = jsonParse(columns[card.type]);
     columnsCopy.title = card.type;
 
     firebase.addToTaskList(newTask).then(() => {
       firebase.addToColumns(columnsCopy).then(() => {
-        const tasksCopy = jsonParse(tasks);
-        const columnsCopy = jsonParse(columns);
+        const newTasks = jsonParse(tasks);
         const index = tasks.findIndex((t) => t.id === newTask.id);
-        tasksCopy[index] = newTask;
-        console.log(columns[card.type]);
-        columnsCopy[card.type].taskIds.push(card.id)
+        newTasks[index] = newTask;
+
         setData({
-          tasks: tasksCopy,
-          columns: columnsCopy,
+          tasks: newTasks,
+          columns,
         });
 
-        setIsNewCreating(false)
-      })
+        setIsNewCreating(false);
+      });
     });
   };
 
@@ -97,6 +95,8 @@ export const NewCard = (props) => {
 
 const Card = (props) => {
   const { card, index } = props;
+  const cardClassName = (snapshot) => `${s.cardBody} ${snapshot.isDragging ? s.draggableCardBody : ''}`;
+
   return (
     <Draggable
       draggableId={card.id.toString()}
@@ -109,7 +109,10 @@ const Card = (props) => {
           {...provided.dragHandleProps}
           ref={provided.innerRef}
         >
-          <div className={snapshot.isDragging ? s.draggableCardBody : s.cardBody}>
+          <div
+            className={cardClassName(snapshot)}
+            // className={snapshot.isDragging ? s.draggableCardBody : s.cardBody}
+          >
             <div>{card.title}</div>
             <div>{card.description}</div>
           </div>

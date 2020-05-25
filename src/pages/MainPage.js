@@ -11,13 +11,13 @@ import { jsonParse } from '../service/utils';
 const { setData, setIsNewCreating } = TaskActions;
 
 class TaskBlockWrapper extends React.Component {
-  shouldComponentUpdate(nextProps) {
-    const { tasks } = this.props;
-    if (nextProps.tasks === tasks) {
-      return false;
-    }
-    return true;
-  }
+  // shouldComponentUpdate(nextProps) {
+  //   const { tasks } = this.props;
+  //   if (nextProps.tasks === tasks) {
+  //     return false;
+  //   }
+  //   return true;
+  // }
 
   render() {
     const {
@@ -26,7 +26,8 @@ class TaskBlockWrapper extends React.Component {
       setColumn,
     } = this.props;
 
-    console.log(tasks)
+    console.log('tasks:', tasks);
+
     return (
       <TaskBlock
         taskType={taskType}
@@ -65,49 +66,64 @@ const MainPage = (props) => {
       return;
     }
 
-    console.log(source);
-
-    if(
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
+    if (
+      destination.droppableId === source.droppableId
+      && destination.index === source.index
     ) {
       return;
     }
 
-    const columnsCopy = jsonParse(columns[destination.droppableId]);
+    const start = columns[source.droppableId];
+    const finish = columns[destination.droppableId];
 
-    columnsCopy.taskIds.splice(source.index, 1);
-    columnsCopy.taskIds.splice(destination.index, 0, parseInt(draggableId));
+    if (start === finish) {
+      const columnsCopy = jsonParse(columns[destination.droppableId]);
+
+      columnsCopy.taskIds.splice(source.index, 1);
+      columnsCopy.taskIds.splice(destination.index, 0, parseInt(draggableId, 10));
+
+      const newColumns = {
+        ...columns,
+        [destination.droppableId]: columnsCopy,
+      };
+
+      setData({
+        tasks,
+        columns: newColumns,
+      });
+
+      const update = {
+        [destination.droppableId]: columnsCopy,
+      };
+
+      firebase.updateColumns(update);
+      return true;
+    }
+    // const newColumns = jsonParse(columns);
+    const startTasksId = Array.from(start.taskIds);
+    startTasksId.splice(source.index, 1);
+    const newStart = {
+      ...start,
+      taskIds: startTasksId,
+    };
+
+    const finishTaskIds = Array.from(finish.taskIds);
+    finishTaskIds.splice(destination.index, 0, parseInt(draggableId, 10));
+    const newFinish = {
+      ...finish,
+      taskIds: finishTaskIds,
+    };
 
     const newColumns = {
       ...columns,
-      [destination.droppableId]: columnsCopy
-    }
+      [source.droppableId]: newStart,
+      [destination.droppableId]: newFinish,
+    };
 
     setData({
       tasks,
-      columns: newColumns
-    })
-
-    console.log(columnsCopy);
-
-    // columnsCopy[destination.droppableId].taskIds.push(parseInt(draggableId));
-    // columnsCopy[source.droppableId].taskIds.splice(draggableId, 1);
-
-    // const update = {
-    //   [destination.droppableId]: columnsCopy[destination.droppableId],
-    //   [source.droppableId]: columnsCopy[source.droppableId]
-    // }
-    //
-    // console.log(update);
-    //
-    // firebase.updateColumns(update).then(() => {
-    //   setData({
-    //     tasks,
-    //     columns: columnsCopy,
-    //   })
-    // })
-
+      columns: newColumns,
+    });
   };
 
   const getTasks = (taskType) => {
@@ -115,14 +131,13 @@ const MainPage = (props) => {
       return false;
     }
 
-    return columns[taskType].taskIds.map((id) => {
-      return tasks.find((task) => task.id === id)
-    })
+    return columns[taskType].taskIds.map((id) => tasks.find((task) => task.id === id));
   };
 
   const setColumn = (newTask, taskType) => {
     const tasksCopy = tasks ? jsonParse(tasks) : [];
     const columnsCopy = columns ? jsonParse(columns) : { [taskType]: { taskIds: [] } };
+
     tasksCopy.push(newTask);
 
     if (!columnsCopy[taskType].taskIds) {

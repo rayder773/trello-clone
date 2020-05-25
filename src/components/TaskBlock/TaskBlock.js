@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Droppable } from 'react-beautiful-dnd';
+import addButton from '../../assets/images/addButton.png';
 import s from './style.module.scss';
 import { Card, NewCard } from '../Card';
 import TaskActions from '../../store/reducers/tasks';
@@ -17,7 +18,7 @@ const TaskBlock = (props) => {
     setData,
     setColumn,
     columns,
-    allTasks
+    allTasks,
   } = props;
 
   const getTitleBackground = { background: taskType.titleBackground };
@@ -74,7 +75,17 @@ const TaskBlock = (props) => {
         )}
 
       </Droppable>
-      {!isNewCreating && <button onClick={onCreateTask}>Click</button>}
+      {!isNewCreating && (
+      <div
+        onClick={onCreateTask}
+        className={s.addButton}
+      >
+        <img
+          src={addButton}
+          alt="add button"
+        />
+      </div>
+      )}
     </div>
   );
 };
