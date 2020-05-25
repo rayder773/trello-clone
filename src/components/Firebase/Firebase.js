@@ -33,6 +33,10 @@ class Firebase {
     .child(FIRE_BASE_FIELDS.columns)
     .child(column.title)
     .set(column);
+
+  updateColumns = (columns) => this.taskList()
+    .child(FIRE_BASE_FIELDS.columns)
+    .update(columns)
 }
 
 export default Firebase;

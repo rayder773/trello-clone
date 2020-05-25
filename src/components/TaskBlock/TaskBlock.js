@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Droppable } from 'react-beautiful-dnd';
@@ -11,11 +11,13 @@ const { setIsNewCreating, setData } = TaskActions;
 const TaskBlock = (props) => {
   const {
     taskType,
-    tasks,
+    columnTasks,
     isNewCreating,
     setIsNewCreating,
     setData,
     setColumn,
+    columns,
+    allTasks
   } = props;
 
   const getTitleBackground = { background: taskType.titleBackground };
@@ -23,8 +25,7 @@ const TaskBlock = (props) => {
 
   const onCreateTask = (e) => {
     e.preventDefault();
-    console.log(tasks);
-    const newId = tasks ? tasks[tasks.length - 1].id + 1 : 0;
+    const newId = allTasks ? allTasks[allTasks.length - 1].id + 1 : 0;
 
     const newTask = {
       id: newId,
@@ -32,20 +33,7 @@ const TaskBlock = (props) => {
       isNew: true,
     };
 
-    // setIsNewCreating(true);
     setColumn(newTask, taskType.type);
-
-    // const sortedTasks = taskList
-    //   && [...taskList].sort((a, b) => a.id - b.id);
-    // const newId = sortedTasks.length ? sortedTasks[sortedTasks.length - 1].id + 1 : 1;
-    // taskListCopy.push({
-    //   id: newId,
-    //   type: taskType.type,
-    //   isNew: true,
-    // });
-    //
-    // setFilteredTasks(taskListCopy);
-    // setIsCreateNew(true);
   };
 
   return (
@@ -67,7 +55,7 @@ const TaskBlock = (props) => {
             {...provided.droppableProps}
             ref={provided.innerRef}
           >
-            {tasks && tasks.map((card, i) => (card.isNew
+            {columnTasks && columnTasks.map((card, i) => (card.isNew
               ? (
                 <NewCard
                   card={card}
@@ -105,6 +93,8 @@ TaskBlock.propTypes = {
 
 const mapStateToProps = ({ tasks }) => ({
   isNewCreating: tasks.isNewCreating,
+  columns: tasks.columns,
+  allTasks: tasks.tasks,
 });
 
 const mapDispatchToProps = {

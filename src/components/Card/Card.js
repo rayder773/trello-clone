@@ -35,14 +35,24 @@ export const NewCard = (props) => {
     };
 
     const columnsCopy = jsonParse(columns[card.type])
-
-    columnsCopy.title = card.type
+    columnsCopy.title = card.type;
 
     firebase.addToTaskList(newTask).then(() => {
-      firebase.addToColumns(columnsCopy);
-    });
+      firebase.addToColumns(columnsCopy).then(() => {
+        const tasksCopy = jsonParse(tasks);
+        const columnsCopy = jsonParse(columns);
+        const index = tasks.findIndex((t) => t.id === newTask.id);
+        tasksCopy[index] = newTask;
+        console.log(columns[card.type]);
+        columnsCopy[card.type].taskIds.push(card.id)
+        setData({
+          tasks: tasksCopy,
+          columns: columnsCopy,
+        });
 
-    console.log(columnsCopy);
+        setIsNewCreating(false)
+      })
+    });
   };
 
   const onChange = (e) => {
@@ -53,8 +63,8 @@ export const NewCard = (props) => {
     });
   };
 
-  const onCloseClick = useCallback(() => {
-    const tasksCopy = [...tasks];
+  const onCloseClick = () => {
+    const tasksCopy = jsonParse(tasks);
     const columnsCopy = jsonParse(columns);
     const taskIndex = tasksCopy.findIndex((el) => el.isNew === true);
     const taskForDelete = tasksCopy[taskIndex];
@@ -63,13 +73,13 @@ export const NewCard = (props) => {
     tasksCopy.splice(taskIndex, 1);
     columnsCopy[taskForDelete.type].taskIds.splice(taskIndexInColumn, 1);
     setData({
-      tasks: tasksCopy.length && tasksCopy.length,
+      tasks: tasksCopy.length && tasksCopy,
       ...columns,
       columns: columnsCopy,
     });
 
     setIsNewCreating(false);
-  }, []);
+  };
 
   return (
     <li>
