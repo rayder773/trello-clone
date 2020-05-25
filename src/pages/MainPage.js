@@ -99,15 +99,15 @@ const MainPage = (props) => {
       firebase.updateColumns(update);
       return true;
     }
-    // const newColumns = jsonParse(columns);
-    const startTasksId = Array.from(start.taskIds);
+
+    const startTasksId = start.taskIds ? Array.from(start.taskIds) : [];
     startTasksId.splice(source.index, 1);
     const newStart = {
       ...start,
       taskIds: startTasksId,
     };
 
-    const finishTaskIds = Array.from(finish.taskIds);
+    const finishTaskIds = finish.taskIds ? Array.from(finish.taskIds) : [];
     finishTaskIds.splice(destination.index, 0, parseInt(draggableId, 10));
     const newFinish = {
       ...finish,
