@@ -1,3 +1,6 @@
+@import "src/assets/style/mixins";
+@import "src/assets/style/variables";
+
 .modal {
   position: fixed;
   height: 100vh;
@@ -12,5 +15,37 @@
 .form {
   width: 300px;
   background: white;
-  height: 200px;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+
+  label {
+    margin-bottom: 8px;
+  }
+
+  input {
+    height: 24px;
+    border-radius: 5px;
+    border: 1px solid #E8E8E8;
+    box-sizing: border-box;
+    padding-left: 10px;
+  }
+
+  textarea {
+    border-radius: 5px;
+    border: 1px solid #E8E8E8;
+    box-sizing: border-box;
+    min-height: 80px;
+    width: 90%;
+    padding: 8px 0 0 10px;
+  }
+}
+
+.submitButton {
+  @include button($colorTrelloGreen);
 }

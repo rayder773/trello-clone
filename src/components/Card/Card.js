@@ -137,8 +137,8 @@ const Card = (props) => {
   const cartTitleClassName = taskType.crossedOut ? s.liveStatus : '';
 
   const onCardClick = () => {
-    setModal(true, card)
-  }
+    setModal(true, card);
+  };
 
   return (
     <Draggable
@@ -164,7 +164,7 @@ const Card = (props) => {
                 <div className={s.cardTitle}>{card.title}</div>
               </div>
             </div>
-            <div>{card.description}</div>
+            {!taskType.onlyTitle && <div className={s.cardDescription}>{card.description}</div>}
           </div>
 
         </li>

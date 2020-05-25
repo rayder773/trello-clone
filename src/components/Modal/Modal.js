@@ -75,28 +75,34 @@ const Modal = ({
         className={s.form}
         onSubmit={onSubmit}
       >
-        <label htmlFor={STRINGS.titleInput}>
-          {STRINGS.title}
-        </label>
-        <input
-          id={STRINGS.titleInput}
-          name="title"
-          value={form.title}
-          onChange={onChange}
-        />
-
-        <label htmlFor={STRINGS.descriptionInput}>
-          {STRINGS.description}
-        </label>
-        <input
-          id={STRINGS.descriptionInput}
-          name="description"
-          value={form.description}
-          onChange={onChange}
-        />
-
-        <button type="submit">{STRINGS.saveButton}</button>
-
+        <div className={s.inputWrapper}>
+          <label htmlFor={STRINGS.titleInput}>
+            {STRINGS.title}
+          </label>
+          <input
+            id={STRINGS.titleInput}
+            name="title"
+            value={form.title}
+            onChange={onChange}
+          />
+        </div>
+        <div className={s.inputWrapper}>
+          <label htmlFor={STRINGS.descriptionInput}>
+            {STRINGS.description}
+          </label>
+          <textarea
+            id={STRINGS.descriptionInput}
+            name="description"
+            value={form.description}
+            onChange={onChange}
+          />
+        </div>
+        <button
+          type="submit"
+          className={s.submitButton}
+        >
+          {STRINGS.saveButton}
+        </button>
       </form>
 
     </div>
