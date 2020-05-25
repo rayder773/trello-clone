@@ -114,11 +114,17 @@ const MainPage = (props) => {
       taskIds: finishTaskIds,
     };
 
-    const newColumns = {
-      ...columns,
+    const updates = {
       [source.droppableId]: newStart,
       [destination.droppableId]: newFinish,
     };
+
+    const newColumns = {
+      ...columns,
+      ...updates,
+    };
+
+    firebase.updateColumns(updates);
 
     setData({
       tasks,
