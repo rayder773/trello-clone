@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import PropTypes from 'prop-types';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { DragDropContext } from 'react-beautiful-dnd';
 import s from './style.module.scss';
@@ -7,28 +8,9 @@ import TaskBlock from '../components/TaskBlock';
 import { withFirebase } from '../components/Firebase/context';
 import TaskActions from '../store/reducers/tasks';
 import { jsonParse } from '../service/utils';
-import Modal from "../components/Modal/Modal";
+import Modal from '../components/Modal/Modal';
 
 const { setData, setIsNewCreating } = TaskActions;
-
-class TaskBlockWrapper extends React.Component {
-  render() {
-    const {
-      taskType,
-      tasks,
-      setColumn,
-    } = this.props;
-
-    return (
-      <TaskBlock
-        taskType={taskType}
-        key={taskType.type}
-        columnTasks={tasks}
-        setColumn={setColumn}
-      />
-    );
-  }
-}
 
 const MainPage = (props) => {
   const {
@@ -140,7 +122,9 @@ const MainPage = (props) => {
     if (!columnsCopy[taskType].taskIds) {
       columnsCopy[taskType].taskIds = [];
     }
+
     columnsCopy[taskType].taskIds.push(newTask.id);
+
     setData({
       tasks: tasksCopy,
       columns: columnsCopy,
@@ -153,10 +137,10 @@ const MainPage = (props) => {
       <DragDropContext onDragEnd={onDragEnd}>
         {Object.values(taskTypes)
           .map((taskType) => (
-            <TaskBlockWrapper
+            <TaskBlock
               taskType={taskType}
               key={taskType.type}
-              tasks={getTasks(taskType.type)}
+              columnTasks={getTasks(taskType.type)}
               setColumn={setColumn}
             />
           ))}
@@ -175,7 +159,14 @@ const mapStateToProps = ({ tasks }) => ({
 const mapDispatchToProps = {
   setData,
   setIsNewCreating,
-
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withFirebase(MainPage));
+
+MainPage.propTypes = {
+  columns: PropTypes.object.isRequired,
+  firebase: PropTypes.object.isRequired,
+  setData: PropTypes.func.isRequired,
+  setIsNewCreating: PropTypes.func.isRequired,
+  tasks: PropTypes.array.isRequired,
+};

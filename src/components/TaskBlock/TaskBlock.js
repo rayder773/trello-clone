@@ -7,7 +7,7 @@ import s from './style.module.scss';
 import { Card, NewCard } from '../Card';
 import TaskActions from '../../store/reducers/tasks';
 
-const { setIsNewCreating, setData } = TaskActions;
+const { setIsNewCreating } = TaskActions;
 
 const TaskBlock = (props) => {
   const {
@@ -95,6 +95,10 @@ const TaskBlock = (props) => {
 };
 
 TaskBlock.propTypes = {
+  allTasks: PropTypes.array.isRequired,
+  columnTasks: PropTypes.array.isRequired,
+  isNewCreating: PropTypes.bool.isRequired,
+  setColumn: PropTypes.func.isRequired,
   taskType: PropTypes.shape({
     onlyTitle: PropTypes.bool.isRequired,
     type: PropTypes.string.isRequired,
@@ -102,9 +106,9 @@ TaskBlock.propTypes = {
     titleBackground: PropTypes.string.isRequired,
     bodyBackground: PropTypes.string.isRequired,
     withMark: PropTypes.bool.isRequired,
-    crossedOut: PropTypes.bool.isRequired,
-  }).isRequired,
-};
+    crossedOut: PropTypes.bool.isRequired
+  }).isRequired
+}
 
 const mapStateToProps = ({ tasks }) => ({
   isNewCreating: tasks.isNewCreating,

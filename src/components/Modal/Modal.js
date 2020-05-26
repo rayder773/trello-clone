@@ -121,3 +121,12 @@ const mapDispatchToProps = {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withFirebase(Modal));
+
+Modal.propTypes = {
+  allTasks: PropTypes.array.isRequired,
+  firebase: PropTypes.object.isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  modalContent: PropTypes.object.isRequired,
+  setData: PropTypes.func.isRequired,
+  setModal: PropTypes.func.isRequired,
+};

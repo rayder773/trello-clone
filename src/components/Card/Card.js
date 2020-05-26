@@ -12,7 +12,6 @@ import cancelImage from '../../assets/images/close-circle.png';
 import ModalActions from '../../store/reducers/modal';
 
 const { setModal } = ModalActions;
-
 const { setIsNewCreating, setData } = TaskActions;
 
 const initialForm = {
@@ -22,7 +21,7 @@ const initialForm = {
 const CompletedTaskHeader = () => (
   <div className={s.completedTaskHeader}>
     <img src={doneGreen} />
-    Completed
+    {STRINGS.completed}
   </div>
 );
 
@@ -34,7 +33,6 @@ export const NewCard = (props) => {
     setIsNewCreating,
     columns,
     setData,
-    setModal,
   } = props;
   const [form, setForm] = useState(initialForm);
 
@@ -82,7 +80,8 @@ export const NewCard = (props) => {
     const columnsCopy = jsonParse(columns);
     const taskIndex = tasksCopy.findIndex((el) => el.isNew === true);
     const taskForDelete = tasksCopy[taskIndex];
-    const taskIndexInColumn = columnsCopy[taskForDelete.type].taskIds.findIndex((el) => el === taskForDelete.id);
+    const taskIndexInColumn = columnsCopy[taskForDelete.type].taskIds
+      .findIndex((el) => el === taskForDelete.id);
 
     tasksCopy.splice(taskIndex, 1);
     columnsCopy[taskForDelete.type].taskIds.splice(taskIndexInColumn, 1);
@@ -176,10 +175,17 @@ const Card = (props) => {
 Card.propTypes = {
   card: PropTypes.object.isRequired,
   index: PropTypes.number.isRequired,
+  setModal: PropTypes.func.isRequired,
+  taskType: PropTypes.object.isRequired,
 };
 
 NewCard.propTypes = {
   card: PropTypes.object.isRequired,
+  columns: PropTypes.object.isRequired,
+  firebase: PropTypes.object.isRequired,
+  setData: PropTypes.func.isRequired,
+  setIsNewCreating: PropTypes.func.isRequired,
+  tasks: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = ({ tasks }) => ({
